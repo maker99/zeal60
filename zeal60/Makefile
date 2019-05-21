@@ -21,4 +21,4 @@ zeal65: zeal60.cpp keycode.cpp keycode.h config.h
 clean:
 	$(RM) zeal60 zeal65
 
-all: zeal60 zeal65
+all: zeal60 zeal65 zealMaker99_104
