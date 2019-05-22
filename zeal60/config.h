@@ -1,4 +1,5 @@
 #pragma once
+// define VID, PIC, HID interface number, buffer size and keyboards' rows and columns
 
 #ifdef ZEAL65
 
