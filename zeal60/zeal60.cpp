@@ -600,7 +600,12 @@ int main(int argc, char **argv)
 	{
 		device = hid_open_least_uptime( 0x5241, 0x4B59, DEVICE_INTERFACE_NUMBER );
 	}
-	if ( ! device )
+  // use VID and PID defined during build from config.h
+	if ( !device )
+	{
+		device = hid_open_least_uptime( DEVICE_VID, DEVICE_PID, DEVICE_INTERFACE_NUMBER );
+	}    	
+  if ( ! device )             
 	{
 		std::cerr << "*** Error: Device not found" << std::endl;
 		return -1;
