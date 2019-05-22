@@ -1,4 +1,3 @@
-#pragma once
 
 #ifdef _MSC_VER
 // Stop compiler bitching about sscanf() being unsafe.
