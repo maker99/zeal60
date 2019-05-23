@@ -24,7 +24,7 @@
 #define MATRIX_ROWS 8
 
 
-#elif ZEALM2x4
+#elif ZEALM2X4
 
 #define DEVICE_VID 0xFEED
 #define DEVICE_PID 0x0024
