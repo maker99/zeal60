@@ -1117,16 +1117,16 @@ int main(int argc, char **argv)
 					i++;
 					switch(input_string[i])
 					{
-						case 'b':	macro_string += '\b';              break;  // backspace
-						case 'r':	macro_string += '\n';              break;  // newline
-						case 'e':	macro_string += '\x1B';            break;  // Escape
-						case 'n':	macro_string += '\n';              break;  // newline
-						case 't':	macro_string += '\t';              break;  // tab
-						case '0':	macro_string += '\0';              break;  // macro separator
-						case '1':	macro_string += '\1';              break;  // tap 
-						case '2':	macro_string += '\2';              break;  // down
-						case '3':	macro_string += '\3';              break;  // up
-						case 'x':	char hex[3];				                       // convert \xAB into one byte
+						case 'b': macro_string += '\b';              break;  // backspace
+						case 'r': macro_string += '\n';              break;  // newline
+						case 'e': macro_string += '\x1B';            break;  // Escape
+						case 'n': macro_string += '\n';              break;  // newline
+						case 't': macro_string += '\t';              break;  // tab
+						case '0': macro_string += '\0';              break;  // macro separator
+						case '1': macro_string += '\1';              break;  // tap 
+						case '2': macro_string += '\2';              break;  // down
+						case '3': macro_string += '\3';              break;  // up
+						case 'x': char hex[3];                               // convert \xAB into one byte
 						          uint8_t hexVal;
 						          hex[0] = input_string[i+1];
 						          hex[1] = input_string[i+2];
@@ -1134,7 +1134,7 @@ int main(int argc, char **argv)
 						          hexVal = (int)strtol(hex, NULL, 16);
 						          i += 2;
 						                                             break;
-						default:	macro_string += input_string[i];   break;  // literal char
+						default:  macro_string += input_string[i];   break;  // literal char
 					}  
 				}
 			}
