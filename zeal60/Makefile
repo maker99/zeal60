@@ -8,7 +8,7 @@ CXX=g++
 
 # determine OS specific parameters
 OSNAME:=$(shell uname -s)
-$(info we are compiling in: [${OSNAME}])
+#$(info OS name: [${OSNAME}])
 
 CPPFLAGS=-I/usr/local/lib -Wno-write-strings 
 LDFLAGS=
@@ -38,10 +38,13 @@ $(COBJS): %.o: ../hidapi/windows/%.c
 #      -D$(shell...) transforms the target (= the keyboard name) into the uppercase, which
 #      is used in config.h to define keyboard specific data (e.g. PID,VID,...)
 $(KEYBOARDS): $(SOURCES)
-	$(CXX) $(CPPFLAGS) -D$(shell echo ${@} | tr a-z A-Z ) $(filter %.cpp,$^) -o $@ $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) -D$(shell echo ${@} | tr a-z A-Z ) $(filter %.cpp,$^) -o $@ $(LDFLAGS) 
 
 	
 # Targets: 
+dist: 
+	$(RM) *.o
+	
 clean:
 	$(RM) *.exe *.o $(KEYBOARDS)
 	
