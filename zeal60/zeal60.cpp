@@ -552,12 +552,12 @@ hid_test(void)
 	devs = hid_enumerate(0x0, 0x0);
 	cur_dev = devs;	
 	while (cur_dev) {
-		printf("Device Found\n  type: %04hx %04hx\n  path: %s\n  serial_number: %ls", cur_dev->vendor_id, cur_dev->product_id, cur_dev->path, cur_dev->serial_number);
+		printf("Device Found\n	type: %04hx %04hx\n  path: %s\n	 serial_number: %ls", cur_dev->vendor_id, cur_dev->product_id, cur_dev->path, cur_dev->serial_number);
 		printf("\n");
 		printf("  Manufacturer: %ls\n", cur_dev->manufacturer_string);
-		printf("  Product:      %ls\n", cur_dev->product_string);
-		printf("  Release:      %hx\n", cur_dev->release_number);
-		printf("  Interface:    %d\n",  cur_dev->interface_number);
+		printf("  Product:	%ls\n", cur_dev->product_string);
+		printf("  Release:	%hx\n", cur_dev->release_number);
+		printf("  Interface:	%d\n",	cur_dev->interface_number);
 		printf("\n");
 		cur_dev = cur_dev->next;
 	}
@@ -600,12 +600,12 @@ int main(int argc, char **argv)
 	{
 		device = hid_open_least_uptime( 0x5241, 0x4B59, DEVICE_INTERFACE_NUMBER );
 	}
-  // use VID and PID defined during build from config.h
+	// use VID and PID defined during build from config.h
 	if ( !device )
 	{
 		device = hid_open_least_uptime( DEVICE_VID, DEVICE_PID, DEVICE_INTERFACE_NUMBER );
-	}    	
-	if ( ! device )             
+	}	
+	if ( ! device )		    
 	{
 		std::cerr << "*** Error: Device not found" << std::endl;
 		printf("VID: %02X, PID: %02X, interface: %02X\n", DEVICE_VID, DEVICE_PID, DEVICE_INTERFACE_NUMBER);
@@ -663,7 +663,7 @@ int main(int argc, char **argv)
 		return 0;
 	}
 	else if ( command == "backlight_config_set_value" ||
-			 command == "backlight_config_set_values" )
+						command == "backlight_config_set_values" )
 	{
 		for ( int i = 2; i < argc; i++ )
 		{
@@ -856,17 +856,17 @@ int main(int argc, char **argv)
 		std::cout << "Backlight config alphas/mods set" << std::endl;
 		return 0;
 	}
-  else if (command == "keymap_reset")
+	else if (command == "keymap_reset")
 	{
-    if ( ! dynamic_keymap_reset( device) )
-    {
-      std::cerr << "*** Error: Error resetting keymap" << std::endl;
-      hid_close( device );
-      return -1;
-    }
- 		return 0;
+		if ( ! dynamic_keymap_reset( device) )
+		{
+			std::cerr << "*** Error: Error resetting keymap" << std::endl;
+			hid_close( device );
+			return -1;
+		}
+		return 0;
 	}
-	else if (command == "keymap" || command == "set_keymap"  || command == "keymap_set" )                                                                    
+	else if (command == "keymap" || command == "set_keymap"	 || command == "keymap_set" )									 
 	{
 		if (argc != 2 + 1 + MATRIX_ROWS * MATRIX_COLS)
 		{
@@ -920,8 +920,8 @@ int main(int argc, char **argv)
 		std::cout << "Keymap layer " << layer << " saved" << std::endl;
 		return 0;
 	}
-  else if (command == "get_keymap" || command == "keymap_get")
-  {
+	else if (command == "get_keymap" || command == "keymap_get")
+	{
 		if (argc != 2 + 1)
 		{
 			std::cerr << "*** Error: Invalid number of arguments for '" << command << "'" << std::endl;
@@ -964,16 +964,16 @@ int main(int argc, char **argv)
 	}
 	else if (command == "macro_buffer_reset" || command == "macros_reset")
 	{
-    if ( ! dynamic_keymap_macro_reset( device) )
-    {
-      std::cerr << "*** Error: Error resetting macro buffer" << std::endl;
-      hid_close( device );
-      return -1;
-    }
- 		return 0;
+		if ( ! dynamic_keymap_macro_reset( device) )
+		{
+			std::cerr << "*** Error: Error resetting macro buffer" << std::endl;
+			hid_close( device );
+			return -1;
+		}
+		return 0;
 	}  
 	else if ( command == "get_macro_buffer" || command == "get_macros" || command == "macros_get")
-  {
+	{
 		uint16_t buffer_size = 0;
 		res = dynamic_keymap_macro_get_buffer_size( device, &buffer_size );
 		if ( ! res )
@@ -990,15 +990,15 @@ int main(int argc, char **argv)
 			return -1;
 		}		
 
-    uint8_t macroCount;  
-    res = dynamic_keymap_macro_get_count(device, &macroCount);
+		uint8_t macroCount;	 
+		res = dynamic_keymap_macro_get_count(device, &macroCount);
 		if ( ! res )
-    {
+		{
 			std::cerr << "*** Error: Error getting macro count" << std::endl;
 			hid_close( device );
 			return -1;
 		}
-    
+
 		// create big enough buffer
 		uint8_t buffer[1024];
 		res = dynamic_keymap_macro_get_buffer( device, buffer, buffer_size );
@@ -1008,38 +1008,39 @@ int main(int argc, char **argv)
 			hid_close( device );
 			return -1;
 		}
-    
-    // print macros 0 .. macroCount 
-    for (int i = 0, j=0; i < buffer_size, j < macroCount; i++)
-    {
-      printf("%02d: ",j++); // print macro number
-      
-      for (bool isTapCode = false; buffer[i] != 0 && i < buffer_size; i++)
-      {
-        if (isTapCode) // after a tap code we just print the hex value
-        {
-          printf("\\x%02X",buffer[i]);
-          isTapCode = false; 
-        } else {
-          switch (buffer[i])
-          {
-            case 0            :                                             break; // macro separator should not appear here
-            case 1 ... 3      :  printf("\\%d",buffer[i]);
-                                 isTapCode=true                         ;   break; // 1: tap, 2: down, 3: up
-            case '\b'         :  printf("\\b")                          ;   break; // back space
-            case '\n'         :  printf("\\n")                          ;   break; // enter
-            case '\t'         :  printf("\\t")                          ;   break; // tab
-            case 0x1B         :  printf("\\e")                          ;   break; // escape
-            case 0x0B ... 0x1A:  
-            case 0x1C ... 0x1F:                                            
-            case 0x80 ... 0xFF:  printf("\\x%02X",buffer[i])            ;   break; // non printable ASCII => print hex value
-            default           :  printf("%c",buffer[i])                 ;   break; // printable ASCII char
-          } 
-        }
-      }
-      printf("\n");
-    }
-        
+
+		// print macros 0 .. macroCount 
+		for (int i = 0, j=0; i < buffer_size, j < macroCount; i++)
+		{
+			printf("%02d: ",j++); // print macro number
+			
+			for (bool isTapCode = false; buffer[i] != 0 && i < buffer_size; i++)
+			{
+				if (isTapCode) // after a tap code we just print the hex value
+				{
+					printf("\\x%02X",buffer[i]);
+					isTapCode = false; 
+				} else {
+					switch (buffer[i])
+					{
+						case 0             :                                  break; // macro separator should not appear here
+						case 1 ... 3       :  printf("\\%d",buffer[i]);
+						                      isTapCode=true;
+						                                                     break; // 1: tap, 2: down, 3: up
+						case '\b'          :  printf("\\b")              ;   break; // back space
+						case '\n'          :  printf("\\n")              ;   break; // enter
+						case '\t'          :  printf("\\t")              ;   break; // tab
+						case 0x1B          :  printf("\\e")              ;   break; // escape
+						case 0x0B ... 0x1A :
+						case 0x1C ... 0x1F :
+						case 0x80 ... 0xFF :  printf("\\x%02X",buffer[i]);   break; // non printable ASCII => print hex value
+						default            :  printf("%c",buffer[i])     ;   break; // printable ASCII char
+					} 
+				}
+			}
+			printf("\n");
+		}
+	
 		hid_close( device );
 		return 0;
 	}
@@ -1054,7 +1055,7 @@ int main(int argc, char **argv)
 			return -1;
 		}
 
-    // check buffer size 
+		// check buffer size 
 		if ( buffer_size >= 1024 )
 		{
 			std::cerr << "*** Error: Error getting macro buffer size: " << buffer_size << ", it's >1024" << std::endl;
@@ -1062,89 +1063,91 @@ int main(int argc, char **argv)
 			return -1;
 		}
 
-    // get arguments
+		// get arguments
 		if (argc < 3)
 		{
 			std::cerr << "*** Error: Invalid number of arguments: " << argc << " for '" << command << "'" << std::endl;
 			return -1;
 		}
-    
-    /*
-    // process the command line arguments, 
-    // each argument is treated as a separate macro
-    // the macro string  'macro_string' will be send to the keyboard
-    //
-    // Macros can be re-played with keycodes MACRO00 - MACRO15 
-    //    this is using dynamic_keymap_macro_send in mk_firmware\quantum\dynamic_keymap.c
-    //
-    // the macro consists of 
-    //         standard characters and 
-    //         magic chars to encode keycodes 
-    //            If the char is magic (tap, down, up),
-		//            add the next char (key to use) and send a 2 char string.
-    //
-    // references:
-    //     https://beta.docs.qmk.fm/features/feature_macros
-    //
-    //     qmk_firmware\quantum\dynamic_keymap.h 
-    //     qmk_firmware\quantum\dynamic_keymap.c
-    //        dynamic_keymap_macro_send in mk_firmware\quantum\dynamic_keymap.c
-    //         handles magic chars: \1 = SS_TAP_CODE, \2 = SS_DOWN_CODE, \3 = SS_UP_CODE
-    //         and sends them with send_string() in qmk_firmware\quantum\quantum.c 
-    //
-    //     the representation of normal ASCII chars keycodes: 
-    //           qmk_firmware\tmk_core\common\keycode.h (keycodes defined here: hid_keyboard_keypad_usage)
-    //
-    //     Tap codes are defined here: 
-    //           qmk_firmware\quantum\send_string_keycodes.h
-    */
+		
+		/*
+		// process the command line arguments, 
+		// each argument is treated as a separate macro
+		// the macro string	 'macro_string' will be send to the keyboard
+		//
+		// Macros can be re-played with keycodes MACRO00 - MACRO15 
+		//	  this is using dynamic_keymap_macro_send in mk_firmware\quantum\dynamic_keymap.c
+		//
+		// the macro consists of 
+		//	       standard characters and 
+		//	       magic chars to encode keycodes 
+		//		  If the char is magic (tap, down, up),
+		//	      add the next char (key to use) and send a 2 char string.
+		//
+		// references:
+		//	   https://beta.docs.qmk.fm/features/feature_macros
+		//
+		//	   qmk_firmware\quantum\dynamic_keymap.h 
+		//	   qmk_firmware\quantum\dynamic_keymap.c
+		//	      dynamic_keymap_macro_send in mk_firmware\quantum\dynamic_keymap.c
+		//	       handles magic chars: \1 = SS_TAP_CODE, \2 = SS_DOWN_CODE, \3 = SS_UP_CODE
+		//	       and sends them with send_string() in qmk_firmware\quantum\quantum.c 
+		//
+		//	   the representation of normal ASCII chars keycodes: 
+		//		 qmk_firmware\tmk_core\common\keycode.h (keycodes defined here: hid_keyboard_keypad_usage)
+		//
+		//	   Tap codes are defined here: 
+		//		 qmk_firmware\quantum\send_string_keycodes.h
+		*/
 
-    std::string macro_string;
-    for (int arg = 2; arg < argc; arg++)
-    {
-      std::string input_string = argv[arg];
-      // parse the macro string
-      for (int i=0; i < input_string.length(); i++)
-      {
-        // normal input character
-        if (input_string[i] != '\\')
-        {
-          macro_string += input_string[i];
-        } else { // process special codes codes starting with backslash
-          i++;
-          switch(input_string[i])
-          {
-              case 'b':   macro_string += '\b';              break;  // backspace
-              case 'r':   macro_string += '\n';              break;  // newline
-              case 'e':   macro_string += '\x1B';            break;  // Escape
-              case 'n':   macro_string += '\n';              break;  // newline
-              case 't':   macro_string += '\t';              break;  // tab
-              case '0':   macro_string += '\0';              break;  // macro separator
-              case '1':   macro_string += '\1';              break;  // tap 
-              case '2':   macro_string += '\2';              break;  // down
-              case '3':   macro_string += '\3';              break;  // up
-              case 'x':   char hex[3];                               // convert \xAB into one byte
-                          uint8_t hexVal;
-                          hex[0] = input_string[i+1];
-                          hex[1] = input_string[i+2];
-                          hex[2] = '\0'; 
-                          hexVal = (int)strtol(hex, NULL, 16);
-                          i += 2;
-                                                             break;
-              default:    macro_string += input_string[i];   break;  // literal char
-          }  
-        }
-      }
-      // add macro separator
-      if (macro_string.empty() or macro_string.back() != '\0')
-      {
-        macro_string += '\0';
-      }
-    }
-    
-    
-    // check for overlength
-    if (macro_string.length() > buffer_size)
+		std::string macro_string;
+		for (int arg = 2; arg < argc; arg++)
+		{
+			std::string input_string = argv[arg];
+			// parse the macro string
+			for (int i=0; i < input_string.length(); i++)
+			{
+				// normal input character
+				if (input_string[i] != '\\')
+				{
+					macro_string += input_string[i];
+				} 
+				else 
+				{ // process special codes codes starting with backslash
+					i++;
+					switch(input_string[i])
+					{
+						case 'b':	macro_string += '\b';              break;  // backspace
+						case 'r':	macro_string += '\n';              break;  // newline
+						case 'e':	macro_string += '\x1B';            break;  // Escape
+						case 'n':	macro_string += '\n';              break;  // newline
+						case 't':	macro_string += '\t';              break;  // tab
+						case '0':	macro_string += '\0';              break;  // macro separator
+						case '1':	macro_string += '\1';              break;  // tap 
+						case '2':	macro_string += '\2';              break;  // down
+						case '3':	macro_string += '\3';              break;  // up
+						case 'x':	char hex[3];				                       // convert \xAB into one byte
+						          uint8_t hexVal;
+						          hex[0] = input_string[i+1];
+						          hex[1] = input_string[i+2];
+						          hex[2] = '\0';
+						          hexVal = (int)strtol(hex, NULL, 16);
+						          i += 2;
+						                                             break;
+						default:	macro_string += input_string[i];   break;  // literal char
+					}  
+				}
+			}
+			// add macro separator
+			if (macro_string.empty() or macro_string.back() != '\0')
+			{
+				macro_string += '\0';
+			}
+		}
+
+
+		// check for overlength
+		if (macro_string.length() > buffer_size)
 		{
 			std::cerr << "*** Error: macro too long! Size: " << macro_string.length() << " must be below " << buffer_size << std::endl;
 			return -1;
@@ -1154,12 +1157,12 @@ int main(int argc, char **argv)
 		// create a buffer and pad with zeroes 
 		uint8_t buffer[1024];
 		memset(buffer,0,1024);
-    
-    // copy macro to buffer
+
+		// copy macro to buffer
 		memcpy(buffer,macro_string.c_str(),macro_string.length() );
 
 		res = dynamic_keymap_macro_set_buffer( device, buffer, buffer_size );
-    
+
 		if ( ! res )
 		{
 			std::cerr << "*** Error: Error setting macro buffer" << std::endl;
