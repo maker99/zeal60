@@ -605,9 +605,10 @@ int main(int argc, char **argv)
 	{
 		device = hid_open_least_uptime( DEVICE_VID, DEVICE_PID, DEVICE_INTERFACE_NUMBER );
 	}    	
-  if ( ! device )             
+	if ( ! device )             
 	{
 		std::cerr << "*** Error: Device not found" << std::endl;
+		printf("VID: %02X, PID: %02X, interface: %02X\n", DEVICE_VID, DEVICE_PID, DEVICE_INTERFACE_NUMBER);
 		return -1;
 	}
 
@@ -855,7 +856,17 @@ int main(int argc, char **argv)
 		std::cout << "Backlight config alphas/mods set" << std::endl;
 		return 0;
 	}
-	else if (command == "keymap")
+  else if (command == "keymap_reset")
+	{
+    if ( ! dynamic_keymap_reset( device) )
+    {
+      std::cerr << "*** Error: Error resetting keymap" << std::endl;
+      hid_close( device );
+      return -1;
+    }
+ 		return 0;
+	}
+	else if (command == "keymap" || command == "set_keymap"  || command == "keymap_set" )                                                                    
 	{
 		if (argc != 2 + 1 + MATRIX_ROWS * MATRIX_COLS)
 		{
@@ -909,8 +920,8 @@ int main(int argc, char **argv)
 		std::cout << "Keymap layer " << layer << " saved" << std::endl;
 		return 0;
 	}
-	else if (command == "get_keymap")
-	{
+  else if (command == "get_keymap" || command == "keymap_get")
+  {
 		if (argc != 2 + 1)
 		{
 			std::cerr << "*** Error: Invalid number of arguments for '" << command << "'" << std::endl;
@@ -951,8 +962,18 @@ int main(int argc, char **argv)
 		hid_close( device );
 		return 0;
 	}
-	else if ( command == "get_macro_buffer" )
+	else if (command == "macro_buffer_reset" || command == "macros_reset")
 	{
+    if ( ! dynamic_keymap_macro_reset( device) )
+    {
+      std::cerr << "*** Error: Error resetting macro buffer" << std::endl;
+      hid_close( device );
+      return -1;
+    }
+ 		return 0;
+	}  
+	else if ( command == "get_macro_buffer" || command == "get_macros" || command == "macros_get")
+  {
 		uint16_t buffer_size = 0;
 		res = dynamic_keymap_macro_get_buffer_size( device, &buffer_size );
 		if ( ! res )
@@ -967,9 +988,18 @@ int main(int argc, char **argv)
 			std::cerr << "*** Error: Error getting macro buffer size, it's >1024" << std::endl;
 			hid_close( device );
 			return -1;
-		}
+		}		
 
-		// Big enough
+    uint8_t macroCount;  
+    res = dynamic_keymap_macro_get_count(device, &macroCount);
+		if ( ! res )
+    {
+			std::cerr << "*** Error: Error getting macro count" << std::endl;
+			hid_close( device );
+			return -1;
+		}
+    
+		// create big enough buffer
 		uint8_t buffer[1024];
 		res = dynamic_keymap_macro_get_buffer( device, buffer, buffer_size );
 		if ( ! res )
@@ -978,38 +1008,37 @@ int main(int argc, char **argv)
 			hid_close( device );
 			return -1;
 		}
-
-    for (int i = 0, j=0; i < buffer_size; i++)
+    
+    // print macros 0 .. macroCount 
+    for (int i = 0, j=0; i < buffer_size, j < macroCount; i++)
     {
-      if (buffer[i] != 0) // no macro separator? => print macro number and macro content
+      printf("%02d: ",j++); // print macro number
+      
+      for (bool isTapCode = false; buffer[i] != 0 && i < buffer_size; i++)
       {
-        printf("\n%02d: ",j++); // print macro number
-        for (bool isTapCode = false; buffer[i] != 0 && i < buffer_size; i++)
+        if (isTapCode) // after a tap code we just print the hex value
         {
-          if (isTapCode) // after a tap code we just print the hex value
+          printf("\\x%02X",buffer[i]);
+          isTapCode = false; 
+        } else {
+          switch (buffer[i])
           {
-            printf("\\x%02X",buffer[i]);
-            isTapCode = false; 
-          } else {
-            switch (buffer[i])
-            {
-              case 0            :                                             break; // macro separator should not appear here
-              case 1 ... 3      :  printf("\\%d",buffer[i]);
-                                   isTapCode=true                         ;   break; // 1: tap, 2: down, 3: up
-              case '\b'         :  printf("\\b")                          ;   break; // back space
-              case '\n'         :  printf("\\n")                          ;   break; // enter
-              case '\t'         :  printf("\\t")                          ;   break; // tab
-              case 0x1B         :  printf("\\e")                          ;   break; // escape
-              case 0x0B ... 0x1A:  
-              case 0x1C ... 0x1F:                                            
-              case 0x80 ... 0xFF:  printf("\\x%02X",buffer[i])            ;   break; // non printable ASCII => print hex value
-              default           :  printf("%c",buffer[i])                 ;   break; // printable ASCII char
-            } 
-          }
+            case 0            :                                             break; // macro separator should not appear here
+            case 1 ... 3      :  printf("\\%d",buffer[i]);
+                                 isTapCode=true                         ;   break; // 1: tap, 2: down, 3: up
+            case '\b'         :  printf("\\b")                          ;   break; // back space
+            case '\n'         :  printf("\\n")                          ;   break; // enter
+            case '\t'         :  printf("\\t")                          ;   break; // tab
+            case 0x1B         :  printf("\\e")                          ;   break; // escape
+            case 0x0B ... 0x1A:  
+            case 0x1C ... 0x1F:                                            
+            case 0x80 ... 0xFF:  printf("\\x%02X",buffer[i])            ;   break; // non printable ASCII => print hex value
+            default           :  printf("%c",buffer[i])                 ;   break; // printable ASCII char
+          } 
         }
       }
+      printf("\n");
     }
-    printf("\n");
         
 		hid_close( device );
 		return 0;
@@ -1100,15 +1129,17 @@ int main(int argc, char **argv)
                           hex[1] = input_string[i+2];
                           hex[2] = '\0'; 
                           hexVal = (int)strtol(hex, NULL, 16);
-                          macro_string +=  hexVal; 
-                          i +=2;
+                          i += 2;
                                                              break;
               default:    macro_string += input_string[i];   break;  // literal char
           }  
         }
       }
       // add macro separator
-      macro_string += '\0';
+      if (macro_string.empty() or macro_string.back() != '\0')
+      {
+        macro_string += '\0';
+      }
     }
     
     
