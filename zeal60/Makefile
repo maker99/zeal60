@@ -38,11 +38,11 @@ $(COBJS): %.o: ../hidapi/windows/%.c
 #      -D$(shell...) transforms the target (= the keyboard name) into the uppercase, which
 #      is used in config.h to define keyboard specific data (e.g. PID,VID,...)
 $(KEYBOARDS): $(SOURCES)
-	$(CXX) $(CPPFLAGS) -D$(shell tr a-z A-Z <<< ${@}) $(filter %.cpp,$^) -o $@ $(LDFLAGS)
+	$(CXX) $(CPPFLAGS) -D$(shell echo ${@} | tr a-z A-Z ) $(filter %.cpp,$^) -o $@ $(LDFLAGS)
 
 	
 # Targets: 
 clean:
-	$(RM) *.exe *.o
+	$(RM) *.exe *.o $(KEYBOARDS)
 	
 all: $(KEYBOARDS)
