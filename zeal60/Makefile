@@ -24,8 +24,9 @@ else ifeq ($(findstring CYGWIN,$(OSNAME)),CYGWIN)
 	SOURCES  += $(COBJS)
 else
 	CPPFLAGS += -I/usr/local/include/hidapi
-	LDFLAGS  += -lhid.dll
 	COBJS     =
+	LDFLAGS += -lhidapi-libusb
+
 endif
 
 # Rules:
