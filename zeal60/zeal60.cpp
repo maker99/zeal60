@@ -1365,7 +1365,8 @@ int main(int argc, char **argv)
 						          hex[2] = '\0';
 						          hexVal = (int)strtol(hex, NULL, 16);
 						          i += 2;
-						                                             break;
+                      macro_string += hexVal;
+                      break;
 						default:  macro_string += input_string[i];   break;  // literal char
 					}  
 				}
