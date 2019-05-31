@@ -30,8 +30,10 @@
 #include "keycode.h"
 
 // ../../qmk_firmware/ is in include path
-#include "keyboards/zeal60/zeal60_api.h"
-#include "keyboards/zeal60/rgb_backlight_api.h"
+#include "keyboards/MAE/mae104zeal/zeal60_api.h"
+#include "keyboards/MAE/mae104zeal/rgb_backlight_api.h"
+// #include "keyboards/zeal60/zeal60_api.h"
+// #include "keyboards/zeal60/rgb_backlight_api.h"
 #include "quantum/color.h"
 
 #ifdef _DEBUG
@@ -422,6 +424,7 @@ bool backlight_config_set_value_bool( hid_device *device, uint8_t value_id, bool
 {
 	return backlight_config_set_value_uint8( device, value_id, value ? 0x01 : 0x00 );
 }
+
 bool backlight_config_set_value_uint8_2( hid_device *device, uint8_t value_id, uint8_t value1, uint8_t value2 )
 {
 	uint8_t msg[3];
@@ -458,6 +461,34 @@ bool backlight_config_save(  hid_device *device )
 	return send_message( device, id_backlight_config_save );
 }
 
+bool backlight_config_get_value_uint8( hid_device *device, uint8_t value_id, uint8_t *value )
+{
+	uint8_t msg[2];
+	msg[0] = value_id;
+	msg[1] = 0xFF;
+	if ( send_message( device, id_backlight_config_get_value, msg, sizeof(msg), msg, sizeof(msg) ) )
+	{
+		*value = msg[1];
+		return true;
+	}
+	return false;	
+}
+
+bool backlight_config_get_value_uint8_2( hid_device *device, uint8_t value_id, uint8_t *value1, uint8_t *value2  )
+{
+	uint8_t msg[3];
+	msg[0] = value_id;
+	msg[1] = 0xFF;
+	msg[2] = 0xFF;
+	if ( send_message( device, id_backlight_config_get_value, msg, sizeof(msg), msg, sizeof(msg) ) )
+	{
+		*value1 = msg[1];
+		*value2 = msg[2];
+		return true;
+	}
+	return false;	
+}
+
 bool backlight_config_get_value_uint32( hid_device *device, uint8_t value_id, uint32_t *value )
 {
 	uint8_t msg[5];
@@ -474,7 +505,35 @@ bool backlight_config_get_value_uint32( hid_device *device, uint8_t value_id, ui
 	return false;
 }
 
+bool backlight_config_get_value_bool( hid_device *device, uint8_t value_id, bool *value )
+{
+	uint8_t msg[2];
+	msg[0] = value_id;
+	msg[1] = 0xFF;
+	if ( send_message( device, id_backlight_config_get_value, msg, sizeof(msg), msg, sizeof(msg) ) )
+	{
+		*value = (msg[1] == 0x01);
+		return true;
+	}
+	return false;	
+}
 
+bool backlight_config_get_value_HSV( hid_device *device, uint8_t value_id, HSV *value )
+{
+	uint8_t msg[4];
+	msg[0] = value_id;
+	msg[1] = 0xFF;
+	msg[2] = 0xFF;
+	msg[3] = 0x00;
+	if ( send_message( device, id_backlight_config_get_value, msg, sizeof(msg), msg, sizeof(msg) ) )
+	{
+		value->h = uint8_t(double(msg[1]) * 360.0 / 255) ;
+		value->s = uint8_t(double(msg[2]) * 100.0 / 255) ;
+		value->v = uint8_t(double(msg[3]) * 100.0 / 255) ;
+		return true;
+	}
+	return false;	
+}
 
 
 hid_device *
@@ -662,6 +721,159 @@ int main(int argc, char **argv)
 		std::cout << "Jumped to bootloader" << std::endl;
 		return 0;
 	}
+	else if ( command == "backlight_config_get_value" ||
+						command == "backlight_config_get_values" )
+	{
+		for ( int i = 2; i < argc; i++ )
+		{
+			std::string s = argv[i];
+
+			std::string name = s;
+			int intValue = 0;
+			HSV hsvValue;
+			int row,column = 0;
+			uint8_t *data_uint8[4];
+			uint8_t  value_uint8  = 0;
+			uint8_t  value2_uint8  = 0;
+			uint32_t value_uint32 = 0;
+
+			if ( name == "use_split_backspace"  )
+			{
+				if(res = backlight_config_get_value_uint8( device, id_use_split_backspace, &value_uint8 ))
+				{
+					printf("%s=%08X",name.c_str(),value_uint8);
+				}
+			}
+			else if ( name == "brightness" )
+			{
+				if (res = backlight_config_get_value_uint8( device, id_brightness, &value_uint8 ))
+				{
+					printf("%s=%d (%d%%)\n",name.c_str(),value_uint8,uint8_t( double( (value_uint8 * 100.0) / 255.0 )));
+				}
+			}
+			else if ( name == "effect" )
+			{
+				if (res = backlight_config_get_value_uint8( device, id_effect, &value_uint8 ))
+				{
+					printf("%s=%d\n",name.c_str(),value_uint8);
+				}
+			}
+			else if ( name == "effect_speed" )
+			{
+				if (res = backlight_config_get_value_uint8( device, id_effect_speed, &value_uint8 ))
+				{
+					printf("%s=%d\n",name.c_str(),value_uint8);
+				}
+			}
+			else if ( name == "color_1" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_color_1, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "color_2" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_color_2, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "caps_lock_indicator_color" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_caps_lock_indicator_color, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "num_lock_indicator_color" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_num_lock_indicator_color, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "scroll_lock_indicator_color" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_scroll_lock_indicator_color, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "layer_1_indicator_color" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_layer_1_indicator_color, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "layer_2_indicator_color" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_layer_2_indicator_color, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "layer_3_indicator_color" )
+			{
+				if (res = backlight_config_get_value_HSV( device, id_layer_3_indicator_color, &hsvValue ))
+				{
+					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
+				}
+			}
+			else if ( name == "caps_lock_indicator_row_col" )
+			{
+				if (res = backlight_config_get_value_uint8_2( device, id_caps_lock_indicator_row_col, &value_uint8, &value2_uint8 ))
+				{
+					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
+				}
+			}
+			else if ( name == "num_lock_indicator_row_col" )
+			{
+				if (res = backlight_config_get_value_uint8_2( device, id_num_lock_indicator_row_col, &value_uint8, &value2_uint8 ))
+				{
+					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
+				}
+			}
+			else if ( name == "scroll_lock_indicator_row_col" )
+			{
+				if (res = backlight_config_get_value_uint8_2( device, id_scroll_lock_indicator_row_col, &value_uint8, &value2_uint8 ))
+				{
+					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
+				}
+			}
+			else if ( name == "layer_1_indicator_row_col" )
+			{
+				if (res = backlight_config_get_value_uint8_2( device, id_layer_1_indicator_row_col, &value_uint8, &value2_uint8 ))
+				{
+					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
+				}
+			}
+			else if ( name == "layer_2_indicator_row_col" )
+			{
+				if (res = backlight_config_get_value_uint8_2( device, id_layer_2_indicator_row_col, &value_uint8, &value2_uint8 ))
+				{
+					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
+				}
+			}
+			else if ( name == "layer_3_indicator_row_col" )
+			{
+				if (res = backlight_config_get_value_uint8_2( device, id_layer_3_indicator_row_col, &value_uint8, &value2_uint8 ))
+				{
+					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
+				}
+			}
+
+			if ( ! res )
+			{
+				std::cerr << "*** Error: Error getting backlight config values: "<< name << std::endl;
+				hid_close( device );
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	}
 	else if ( command == "backlight_config_set_value" ||
 						command == "backlight_config_set_values" )
 	{
@@ -753,6 +965,16 @@ int main(int argc, char **argv)
 			{
 				res = backlight_config_set_value_HSV( device, id_caps_lock_indicator_color, hsvValue );
 			}
+			else if ( name == "num_lock_indicator_color" &&
+				parse_hsv_color_string2( value.c_str(), &hsvValue ) )
+			{
+				res = backlight_config_set_value_HSV( device, id_num_lock_indicator_color, hsvValue );
+			}
+			else if ( name == "scroll_lock_indicator_color" &&
+				parse_hsv_color_string2( value.c_str(), &hsvValue ) )
+			{
+				res = backlight_config_set_value_HSV( device, id_scroll_lock_indicator_color, hsvValue );
+			}
 			else if ( name == "layer_1_indicator_color" &&
 				parse_hsv_color_string2( value.c_str(), &hsvValue ) )
 			{
@@ -772,6 +994,16 @@ int main(int argc, char **argv)
 				parse_indicator_row_column( value.c_str(), &row, &column ) )
 			{
 				res = backlight_config_set_value_uint8_2( device, id_caps_lock_indicator_row_col, row, column );
+			}
+			else if ( name == "num_lock_indicator_row_col" &&
+				parse_indicator_row_column( value.c_str(), &row, &column ) )
+			{
+				res = backlight_config_set_value_uint8_2( device, id_num_lock_indicator_row_col, row, column );
+			}
+			else if ( name == "scroll_lock_indicator_row_col" &&
+				parse_indicator_row_column( value.c_str(), &row, &column ) )
+			{
+				res = backlight_config_set_value_uint8_2( device, id_scroll_lock_indicator_row_col, row, column );
 			}
 			else if ( name == "layer_1_indicator_row_col" &&
 				parse_indicator_row_column( value.c_str(), &row, &column ) )
