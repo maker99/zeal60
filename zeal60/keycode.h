@@ -18,3 +18,4 @@ size_t getKeycodeStringValueCount();
 
 bool stringToValue( const char *string, uint16_t *value );
 std::string valueToString( uint16_t value );
+std::string valueToKeycode( uint16_t value );

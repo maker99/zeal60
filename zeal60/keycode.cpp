@@ -13,11 +13,24 @@
 #include "../../qmk_firmware/keyboards/zeal60/rgb_backlight_keycodes.h"
 #include "../../qmk_firmware/keyboards/zeal60/zeal60_keycodes.h"
 
+// include macro definitions
+#include "../../qmk_firmware/quantum/send_string_keycodes.h"
+
+#define SS_TAP_CODE 1
+#define SS_DOWN_CODE 2
+#define SS_UP_CODE 3
+
+// Helper macro to turn the macro code defines from send_string_keycodes.h 
+//  into value/string pairs
+#define MAKEHEX(HEX) 0x ## HEX
+#define LOOKUP_MACRO(x) { MAKEHEX(x), #x }
+
 #include <cstring>
 #include <string>
 
 // Helper macro to turn an enum into a value/string pair
 #define LOOKUP_ENTRY(x) { x, #x }
+
 
 KeycodeStringValue g_modStringValue[] = 
 {
@@ -558,6 +571,211 @@ KeycodeStringValue g_keycodeStringValue[] =
   LOOKUP_ENTRY( USER13 ),
   LOOKUP_ENTRY( USER14 ),
   LOOKUP_ENTRY( USER15 ),                                                     
+
+  // send string keycodes from send_string_keycodes
+  LOOKUP_MACRO( X_ROLL_OVER ),
+  LOOKUP_MACRO( X_POST_FAIL ),
+  LOOKUP_MACRO( X_UNDEFINED ),
+  LOOKUP_MACRO( X_A ),
+  LOOKUP_MACRO( X_B ),
+  LOOKUP_MACRO( X_C ),
+  LOOKUP_MACRO( X_D ),
+  LOOKUP_MACRO( X_E ),
+  LOOKUP_MACRO( X_F ),
+  LOOKUP_MACRO( X_G ),
+  LOOKUP_MACRO( X_H ),
+  LOOKUP_MACRO( X_I ),
+  LOOKUP_MACRO( X_J ),
+  LOOKUP_MACRO( X_K ),
+  LOOKUP_MACRO( X_L ),
+  LOOKUP_MACRO( X_M ),
+  LOOKUP_MACRO( X_N ),
+  LOOKUP_MACRO( X_O ),
+  LOOKUP_MACRO( X_P ),
+  LOOKUP_MACRO( X_Q ),
+  LOOKUP_MACRO( X_R ),
+  LOOKUP_MACRO( X_S ),
+  LOOKUP_MACRO( X_T ),
+  LOOKUP_MACRO( X_U ),
+  LOOKUP_MACRO( X_V ),
+  LOOKUP_MACRO( X_W ),
+  LOOKUP_MACRO( X_X ),
+  LOOKUP_MACRO( X_Y ),
+  LOOKUP_MACRO( X_Z ),
+  LOOKUP_MACRO( X_1 ),
+  LOOKUP_MACRO( X_2 ),
+  LOOKUP_MACRO( X_3 ),
+  LOOKUP_MACRO( X_4 ),
+  LOOKUP_MACRO( X_5 ),
+  LOOKUP_MACRO( X_6 ),
+  LOOKUP_MACRO( X_7 ),
+  LOOKUP_MACRO( X_8 ),
+  LOOKUP_MACRO( X_9 ),
+  LOOKUP_MACRO( X_0 ),
+  LOOKUP_MACRO( X_ENTER ),
+  LOOKUP_MACRO( X_ESCAPE ),
+  LOOKUP_MACRO( X_BSPACE ),
+  LOOKUP_MACRO( X_TAB ),
+  LOOKUP_MACRO( X_SPACE ),
+  LOOKUP_MACRO( X_MINUS ),
+  LOOKUP_MACRO( X_EQUAL ),
+  LOOKUP_MACRO( X_LBRACKET ),
+  LOOKUP_MACRO( X_RBRACKET ),
+  LOOKUP_MACRO( X_BSLASH ),
+  LOOKUP_MACRO( X_NONUS_HASH ),
+  LOOKUP_MACRO( X_SCOLON ),
+  LOOKUP_MACRO( X_QUOTE ),
+  LOOKUP_MACRO( X_GRAVE ),
+  LOOKUP_MACRO( X_COMMA ),
+  LOOKUP_MACRO( X_DOT ),
+  LOOKUP_MACRO( X_SLASH ),
+  LOOKUP_MACRO( X_CAPSLOCK ),
+  LOOKUP_MACRO( X_F1 ),
+  LOOKUP_MACRO( X_F2 ),
+  LOOKUP_MACRO( X_F3 ),
+  LOOKUP_MACRO( X_F4 ),
+  LOOKUP_MACRO( X_F5 ),
+  LOOKUP_MACRO( X_F6 ),
+  LOOKUP_MACRO( X_F7 ),
+  LOOKUP_MACRO( X_F8 ),
+  LOOKUP_MACRO( X_F9 ),
+  LOOKUP_MACRO( X_F10 ),
+  LOOKUP_MACRO( X_F11 ),
+  LOOKUP_MACRO( X_F12 ),
+  LOOKUP_MACRO( X_PSCREEN ),
+  LOOKUP_MACRO( X_SCROLLLOCK ),
+  LOOKUP_MACRO( X_PAUSE ),
+  LOOKUP_MACRO( X_INSERT ),
+  LOOKUP_MACRO( X_HOME ),
+  LOOKUP_MACRO( X_PGUP ),
+  LOOKUP_MACRO( X_DELETE ),
+  LOOKUP_MACRO( X_END ),
+  LOOKUP_MACRO( X_PGDOWN ),
+  LOOKUP_MACRO( X_RIGHT ),
+  LOOKUP_MACRO( X_LEFT ),
+  LOOKUP_MACRO( X_DOWN ),
+  LOOKUP_MACRO( X_UP ),
+  LOOKUP_MACRO( X_NUMLOCK ),
+  LOOKUP_MACRO( X_KP_SLASH ),
+  LOOKUP_MACRO( X_KP_ASTERISK ),
+  LOOKUP_MACRO( X_KP_MINUS ),
+  LOOKUP_MACRO( X_KP_PLUS ),
+  LOOKUP_MACRO( X_KP_ENTER ),
+  LOOKUP_MACRO( X_KP_1 ),
+  LOOKUP_MACRO( X_KP_2 ),
+  LOOKUP_MACRO( X_KP_3 ),
+  LOOKUP_MACRO( X_KP_4 ),
+  LOOKUP_MACRO( X_KP_5 ),
+  LOOKUP_MACRO( X_KP_6 ),
+  LOOKUP_MACRO( X_KP_7 ),
+  LOOKUP_MACRO( X_KP_8 ),
+  LOOKUP_MACRO( X_KP_9 ),
+  LOOKUP_MACRO( X_KP_0 ),
+  LOOKUP_MACRO( X_KP_DOT ),
+  LOOKUP_MACRO( X_NONUS_BSLASH ),
+  LOOKUP_MACRO( X_APPLICATION ),
+  LOOKUP_MACRO( X_POWER ),
+  LOOKUP_MACRO( X_KP_EQUAL ),
+  LOOKUP_MACRO( X_F13 ),
+  LOOKUP_MACRO( X_F14 ),
+  LOOKUP_MACRO( X_F15 ),
+  LOOKUP_MACRO( X_F16 ),
+  LOOKUP_MACRO( X_F17 ),
+  LOOKUP_MACRO( X_F18 ),
+  LOOKUP_MACRO( X_F19 ),
+  LOOKUP_MACRO( X_F20 ),
+  LOOKUP_MACRO( X_F21 ),
+  LOOKUP_MACRO( X_F22 ),
+  LOOKUP_MACRO( X_F23 ),
+  LOOKUP_MACRO( X_F24 ),
+  LOOKUP_MACRO( X_EXECUTE ),
+  LOOKUP_MACRO( X_HELP ),
+  LOOKUP_MACRO( X_MENU ),
+  LOOKUP_MACRO( X_SELECT ),
+  LOOKUP_MACRO( X_STOP ),
+  LOOKUP_MACRO( X_AGAIN ),
+  LOOKUP_MACRO( X_UNDO ),
+  LOOKUP_MACRO( X_CUT ),
+  LOOKUP_MACRO( X_COPY ),
+  LOOKUP_MACRO( X_PASTE ),
+  LOOKUP_MACRO( X_FIND ),
+  LOOKUP_MACRO( X__MUTE ),
+  LOOKUP_MACRO( X__VOLUP ),
+  LOOKUP_MACRO( X__VOLDOWN ),
+  LOOKUP_MACRO( X_LOCKING_CAPS ),
+  LOOKUP_MACRO( X_LOCKING_NUM ),
+  LOOKUP_MACRO( X_LOCKING_SCROLL ),
+  LOOKUP_MACRO( X_KP_COMMA ),
+  LOOKUP_MACRO( X_KP_EQUAL_AS400 ),
+  LOOKUP_MACRO( X_INT1 ),
+  LOOKUP_MACRO( X_INT2 ),
+  LOOKUP_MACRO( X_INT3 ),
+  LOOKUP_MACRO( X_INT4 ),
+  LOOKUP_MACRO( X_INT5 ),
+  LOOKUP_MACRO( X_INT6 ),
+  LOOKUP_MACRO( X_INT7 ),
+  LOOKUP_MACRO( X_INT8 ),
+  LOOKUP_MACRO( X_INT9 ),
+  LOOKUP_MACRO( X_LANG1 ),
+  LOOKUP_MACRO( X_LANG2 ),
+  LOOKUP_MACRO( X_LANG3 ),
+  LOOKUP_MACRO( X_LANG4 ),
+  LOOKUP_MACRO( X_LANG5 ),
+  LOOKUP_MACRO( X_LANG6 ),
+  LOOKUP_MACRO( X_LANG7 ),
+  LOOKUP_MACRO( X_LANG8 ),
+  LOOKUP_MACRO( X_LANG9 ),
+  LOOKUP_MACRO( X_ALT_ERASE ),
+  LOOKUP_MACRO( X_SYSREQ ),
+  LOOKUP_MACRO( X_CANCEL ),
+  LOOKUP_MACRO( X_CLEAR ),
+  LOOKUP_MACRO( X_PRIOR ),
+  LOOKUP_MACRO( X_RETURN ),
+  LOOKUP_MACRO( X_SEPARATOR ),
+  LOOKUP_MACRO( X_OUT ),
+  LOOKUP_MACRO( X_OPER ),
+  LOOKUP_MACRO( X_CLEAR_AGAIN ),
+  LOOKUP_MACRO( X_CRSEL ),
+  LOOKUP_MACRO( X_EXSEL ),
+
+  /* Modifiers */
+  LOOKUP_MACRO( X_LCTRL ),
+  LOOKUP_MACRO( X_LSHIFT ),
+  LOOKUP_MACRO( X_LALT ),
+  LOOKUP_MACRO( X_LGUI ),
+  LOOKUP_MACRO( X_RCTRL ),
+  LOOKUP_MACRO( X_RSHIFT ),
+  LOOKUP_MACRO( X_RALT ),
+  LOOKUP_MACRO( X_RGUI ),
+
+  /* System Control */     
+  LOOKUP_MACRO( X_SYSTEM_POWER ),
+  LOOKUP_MACRO( X_SYSTEM_SLEEP ),
+  LOOKUP_MACRO( X_SYSTEM_WAKE ),
+
+  /* Media Control */     
+  LOOKUP_MACRO( X_AUDIO_MUTE ),
+  LOOKUP_MACRO( X_AUDIO_VOL_UP ),
+  LOOKUP_MACRO( X_AUDIO_VOL_DOWN ),
+  LOOKUP_MACRO( X_MEDIA_NEXT_TRACK ),
+  LOOKUP_MACRO( X_MEDIA_PREV_TRACK ),
+  LOOKUP_MACRO( X_MEDIA_STOP ),
+  LOOKUP_MACRO( X_MEDIA_PLAY_PAUSE ),
+  LOOKUP_MACRO( X_MEDIA_SELECT ),
+  LOOKUP_MACRO( X_MEDIA_EJECT ),
+  LOOKUP_MACRO( X_MAIL ),
+  LOOKUP_MACRO( X_CALCULATOR ),
+  LOOKUP_MACRO( X_MY_COMPUTER ),
+  LOOKUP_MACRO( X_WWW_SEARCH ),
+  LOOKUP_MACRO( X_WWW_HOME ),
+  LOOKUP_MACRO( X_WWW_BACK ),
+  LOOKUP_MACRO( X_WWW_FORWARD ),
+  LOOKUP_MACRO( X_WWW_STOP ),
+  LOOKUP_MACRO( X_WWW_REFRESH ),
+  LOOKUP_MACRO( X_WWW_FAVORITES ),
+  LOOKUP_MACRO( X_MEDIA_FAST_FORWARD ),
+  LOOKUP_MACRO( X_MEDIA_REWIND ),
+
 };
 
 size_t getKeycodeStringValueCount()
@@ -982,5 +1200,24 @@ std::string valueToString( uint16_t value )
 		uint8_t kc = value & 0x00FF;
 		return std::string("MT(") + valueToModString(mod) + std::string(",") + valueToString(kc) + std::string(")");
 	}
+	return std::string("?");
+}
+
+
+std::string valueToKeycode( uint16_t value )
+{
+	// search for send string keycodes, they start with X
+	for ( size_t i = 0; i < getKeycodeStringValueCount(); i++ )
+	{
+		if ( getKeycodeStringValue(i)->value == value) 
+		{
+      std::string s = getKeycodeStringValue(i)->string;
+      if (s.substr(0,2) == "X_")
+      {
+        return std::string(  getKeycodeStringValue(i)->string );
+      }
+		}
+	}
+	
 	return std::string("?");
 }

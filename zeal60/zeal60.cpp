@@ -30,10 +30,12 @@
 #include "keycode.h"
 
 // ../../qmk_firmware/ is in include path
-#include "keyboards/MAE/mae104zeal/zeal60_api.h"
-#include "keyboards/MAE/mae104zeal/rgb_backlight_api.h"
-// #include "keyboards/zeal60/zeal60_api.h"
-// #include "keyboards/zeal60/rgb_backlight_api.h"
+#ifdef ZEALM104
+#include "keyboards/M/M104/rgb_backlight_api.h"
+#else
+#include "keyboards/zeal60/rgb_backlight_api.h"
+#endif
+#include "keyboards/zeal60/zeal60_api.h"
 #include "quantum/color.h"
 
 #ifdef _DEBUG
@@ -786,6 +788,7 @@ int main(int argc, char **argv)
 					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
 				}
 			}
+#ifdef ZEALM104			
 			else if ( name == "num_lock_indicator_color" )
 			{
 				if (res = backlight_config_get_value_HSV( device, id_num_lock_indicator_color, &hsvValue ))
@@ -800,6 +803,7 @@ int main(int argc, char **argv)
 					printf("%s=%d,%d,%d\n",name.c_str(),hsvValue.h,hsvValue.s,hsvValue.v);
 				}
 			}
+#endif			
 			else if ( name == "layer_1_indicator_color" )
 			{
 				if (res = backlight_config_get_value_HSV( device, id_layer_1_indicator_color, &hsvValue ))
@@ -828,6 +832,7 @@ int main(int argc, char **argv)
 					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
 				}
 			}
+#ifdef ZEALM104	
 			else if ( name == "num_lock_indicator_row_col" )
 			{
 				if (res = backlight_config_get_value_uint8_2( device, id_num_lock_indicator_row_col, &value_uint8, &value2_uint8 ))
@@ -842,6 +847,7 @@ int main(int argc, char **argv)
 					printf("%s=%d,%d\n",name.c_str(),value_uint8,value2_uint8);
 				}
 			}
+#endif
 			else if ( name == "layer_1_indicator_row_col" )
 			{
 				if (res = backlight_config_get_value_uint8_2( device, id_layer_1_indicator_row_col, &value_uint8, &value2_uint8 ))
@@ -965,6 +971,7 @@ int main(int argc, char **argv)
 			{
 				res = backlight_config_set_value_HSV( device, id_caps_lock_indicator_color, hsvValue );
 			}
+#ifdef ZEALM104	
 			else if ( name == "num_lock_indicator_color" &&
 				parse_hsv_color_string2( value.c_str(), &hsvValue ) )
 			{
@@ -975,6 +982,7 @@ int main(int argc, char **argv)
 			{
 				res = backlight_config_set_value_HSV( device, id_scroll_lock_indicator_color, hsvValue );
 			}
+#endif
 			else if ( name == "layer_1_indicator_color" &&
 				parse_hsv_color_string2( value.c_str(), &hsvValue ) )
 			{
@@ -995,6 +1003,7 @@ int main(int argc, char **argv)
 			{
 				res = backlight_config_set_value_uint8_2( device, id_caps_lock_indicator_row_col, row, column );
 			}
+#ifdef ZEALM104	
 			else if ( name == "num_lock_indicator_row_col" &&
 				parse_indicator_row_column( value.c_str(), &row, &column ) )
 			{
@@ -1005,6 +1014,7 @@ int main(int argc, char **argv)
 			{
 				res = backlight_config_set_value_uint8_2( device, id_scroll_lock_indicator_row_col, row, column );
 			}
+#endif
 			else if ( name == "layer_1_indicator_row_col" &&
 				parse_indicator_row_column( value.c_str(), &row, &column ) )
 			{
@@ -1248,6 +1258,7 @@ int main(int argc, char **argv)
 			
 			for (bool isTapCode = false; buffer[i] != 0 && i < buffer_size; i++)
 			{
+				std::string keycodeString;
 				if (isTapCode) // after a tap code we just print the hex value
 				{
 					printf("\\x%02X",buffer[i]);
@@ -1255,9 +1266,18 @@ int main(int argc, char **argv)
 				} else {
 					switch (buffer[i])
 					{
-						case 0             :                                  break; // macro separator should not appear here
-						case 1 ... 3       :  printf("\\%d",buffer[i]);
-						                      isTapCode=true;
+						case 0             :                                break; // macro separator should not appear here
+						case 1 ... 3       :  
+																	printf("\\%d",buffer[i]);
+								                  printf("\\%d",buffer[i]);
+								                  keycodeString = valueToKeycode( buffer[i+1] );
+								                  i++;
+								                  if (keycodeString == "?")
+								                  {
+								                  	printf("\\x%02X",buffer[i]);            
+								                  } else {
+								                  	printf("\\%s", keycodeString.c_str());
+								                  };
 						                                                     break; // 1: tap, 2: down, 3: up
 						case '\b'          :  printf("\\b")              ;   break; // back space
 						case '\n'          :  printf("\\n")              ;   break; // enter
@@ -1333,6 +1353,8 @@ int main(int argc, char **argv)
 		*/
 
 		std::string macro_string;
+		std::string keyCode_string;
+												 
 		for (int arg = 2; arg < argc; arg++)
 		{
 			std::string input_string = argv[arg];
@@ -1365,8 +1387,23 @@ int main(int argc, char **argv)
 						          hex[2] = '\0';
 						          hexVal = (int)strtol(hex, NULL, 16);
 						          i += 2;
-                      macro_string += hexVal;
-                      break;
+						          macro_string += hexVal;
+						          break;
+						case 'X':                                             // print the send_string keycode 
+						          keyCode_string = ""; 
+										  uint16_t value;
+						          
+						          for (;input_string[i] != ';' && i < input_string.length(); i++)
+						          {
+												keyCode_string += input_string[i];
+						          }
+						          if ( stringToValue(keyCode_string.c_str(), &value ) )
+						          {
+												macro_string += value;
+						          } else {
+												macro_string += " @@";
+						          }
+						                                             break;
 						default:  macro_string += input_string[i];   break;  // literal char
 					}  
 				}
