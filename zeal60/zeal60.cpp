@@ -1259,35 +1259,28 @@ int main(int argc, char **argv)
 			for (bool isTapCode = false; buffer[i] != 0 && i < buffer_size; i++)
 			{
 				std::string keycodeString;
-				if (isTapCode) // after a tap code we just print the hex value
+				switch (buffer[i])
 				{
-					printf("\\x%02X",buffer[i]);
-					isTapCode = false; 
-				} else {
-					switch (buffer[i])
-					{
-						case 0             :                                break; // macro separator should not appear here
-						case 1 ... 3       :  
-																	printf("\\%d",buffer[i]);
-								                  printf("\\%d",buffer[i]);
-								                  keycodeString = valueToKeycode( buffer[i+1] );
-								                  i++;
-								                  if (keycodeString == "?")
-								                  {
-								                  	printf("\\x%02X",buffer[i]);            
-								                  } else {
-								                  	printf("\\%s", keycodeString.c_str());
-								                  };
-						                                                     break; // 1: tap, 2: down, 3: up
-						case '\b'          :  printf("\\b")              ;   break; // back space
-						case '\n'          :  printf("\\n")              ;   break; // enter
-						case '\t'          :  printf("\\t")              ;   break; // tab
-						case 0x1B          :  printf("\\e")              ;   break; // escape
-						case 0x0B ... 0x1A :
-						case 0x1C ... 0x1F :
-						case 0x80 ... 0xFF :  printf("\\x%02X",buffer[i]);   break; // non printable ASCII => print hex value
-						default            :  printf("%c",buffer[i])     ;   break; // printable ASCII char
-					} 
+					case 0             :                                break; // macro separator should not appear here
+					case 1 ... 3       :  
+																printf("\\%d",buffer[i]);
+																keycodeString = valueToKeycode( buffer[i+1] );
+																i++;
+																if (keycodeString == "?")
+																{
+																	printf("\\x%02X",buffer[i]);            
+																} else {
+																	printf("\\%s", keycodeString.c_str());
+																};
+																															 break; // 1: tap, 2: down, 3: up
+					case '\b'          :  printf("\\b")              ;   break; // back space
+					case '\n'          :  printf("\\n")              ;   break; // enter
+					case '\t'          :  printf("\\t")              ;   break; // tab
+					case 0x1B          :  printf("\\e")              ;   break; // escape
+					case 0x0B ... 0x1A :
+					case 0x1C ... 0x1F :
+					case 0x80 ... 0xFF :  printf("\\x%02X",buffer[i]);   break; // non printable ASCII => print hex value
+					default            :  printf("%c",buffer[i])     ;   break; // printable ASCII char
 				}
 			}
 			printf("\n");
