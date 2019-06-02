@@ -707,7 +707,7 @@ int main(int argc, char **argv)
 		std::cout << "EEPROM reset" << std::endl;
 		return 0;
 	}
-	else if ( command == "bootloader_jump" )
+	else if ( command == "bootloader_jump" || command == "jump_bootloader" || command == "bootloader")
 	{
 		res = send_message( device, id_bootloader_jump );
 		if ( ! res )
