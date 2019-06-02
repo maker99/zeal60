@@ -1,3 +1,5 @@
 SUBSYSTEMS=="usb", ATTRS{idProduct}=="6060", ATTRS{idVendor}=="feed", GROUP="zeal60"
 SUBSYSTEMS=="usb", ATTRS{idProduct}=="6065", ATTRS{idVendor}=="feed", GROUP="zeal60"
+SUBSYSTEMS=="usb", ATTRS{idProduct}=="0104", ATTRS{idVendor}=="feed", GROUP="zeal60"
+SUBSYSTEMS=="usb", ATTRS{idProduct}=="0024", ATTRS{idVendor}=="feed", GROUP="zeal60"
 

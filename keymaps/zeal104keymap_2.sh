@@ -1,16 +1,42 @@
 #REM maker99, 2019-05-20 09:18
+export Z=zealM104
+
+# Absolute path to this script. /home/user/bin/foo.sh
+SCRIPT=$(readlink -f $0)
+# Absolute path this script is in. /home/user/bin
+SCRIPTPATH=`dirname $SCRIPT`
+
+for i in ${SCRIPTPATH}/../zeal60/${Z}{,.exe}
+do if [ -f $i ] 
+  then 
+  export ZEAL="$i"
+  fi;  
+done
+
+if [ -f $ZEAL ] 
+then
+  echo zeal is here: ${ZEAL}
+else
+  echo zeal program not found
+  exit 1
+fi
+
+if [ "$(uname -s)" == "Linux" ]
+then
+  export ZEAL="sudo $ZEAL"
+fi
 
 echo keymap 0 
-..\zeal60\zealM104 get_keymap 0
+${ZEAL} get_keymap 0
 echo keymap 1 
-..\zeal60\zealM104 get_keymap 1
+${ZEAL} get_keymap 1
 echo keymap 2 
-..\zeal60\zealM104 get_keymap 2
+${ZEAL} get_keymap 2
 echo keymap 3
-..\zeal60\zealM104 get_keymap 3
+${ZEAL} get_keymap 3
 
 
-..\zeal60\zealM104.exe keymap 0 \
+${ZEAL} keymap 0 \
 KC_F6   KC_F9   KC_SLCK KC_LBRC KC_J       KC_7       KC_SCLN KC_PSLS KC_NO   KC_BSLS KC_TAB        KC_NO   KC_RALT KC_L       KC_P5   KC_NO           KC_NO   \
 KC_F4   KC_F11  KC_F12  KC_0    KC_6       KC_I       KC_9    KC_PPLS KC_RSFT KC_EQL  KC_F3         KC_NO   KC_NO   KC_8       KC_P9   KC_NO           KC_RCTL \
 KC_W    KC_R    KC_E    KC_5    KC_BSPC    KC_LEFT    KC_P6   KC_PMNS KC_LSFT KC_T    KC_Q          KC_NO   KC_NO   KC_ENT     KC_P3   KC_NO           KC_LCTL \
@@ -20,18 +46,18 @@ KC_F5   KC_F10  KC_PSCR KC_MINS KC_U       KC_K       KC_P    KC_PAST KC_NO   KC
 KC_1    KC_2    KC_3    KC_Y    KC_UP      KC_NO      KC_NO   KC_P1   KC_NO   KC_4    KC_CAPS       KC_S    KC_A    KC_P4      KC_P7   KC_APP          KC_NO   \
 KC_NO   KC_C    KC_F    KC_H    KC_INS     KC_HOME    KC_PGUP KC_P0   KC_NO   KC_G    "LT(1,KC_NO)" KC_LGUI KC_NO   KC_DOWN    KC_PDOT KC_NO           KC_NO
 
-..\zeal60\zealM104.exe keymap 1 \
-MACRO06 MACRO09 MACRO14 KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_NO   KC_TRNS KC_TRNS       KC_NO   KC_TRNS KC_TRNS    KC_TRNS KC_NO           KC_NO    \
-MACRO04 MACRO11 MACRO12 KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_TRNS KC_TRNS MACRO03       KC_NO   KC_NO   KC_TRNS    KC_TRNS KC_NO           KC_TRNS  \
-KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS    KC_MS_L    KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS       KC_NO   KC_NO   KC_TRNS    KC_TRNS KC_NO           KC_TRNS  \
-KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_MS_BTN1 KC_MS_BTN3 KC_MS_R KC_TRNS KC_NO   KC_TRNS KC_TRNS       KC_NO   KC_TRNS KC_MS_BTN2 KC_NO   KC_NO           KC_NO    \
-MACRO07 MACRO08 MACRO15 KC_TRNS KC_MUTE    KC_TRNS    KC_TRNS KC_TRNS KC_NO   KC_NO   MACRO01       KC_TRNS MACRO00 KC_TRNS    KC_TRNS KC_TRNS         KC_NO    \
-MACRO05 MACRO10 MACRO13 KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_NO   KC_TRNS MACRO02       KC_NO   KC_NO   KC_TRNS    KC_TRNS KC_TRNS         KC_NO    \
-KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_MS_U    KC_NO      KC_NO   KC_TRNS KC_NO   KC_TRNS KC_TRNS       KC_TRNS KC_TRNS KC_TRNS    KC_TRNS KC_TRNS         KC_NO    \
-KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_NO   KC_TRNS KC_TRNS       KC_TRNS KC_NO   KC_MS_D    KC_TRNS KC_NO           KC_NO
+${ZEAL} keymap 1 \
+MACRO06 MACRO09 MACRO14 KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_NO         KC_TRNS KC_TRNS       KC_NO   KC_TRNS KC_TRNS    KC_TRNS KC_NO           KC_NO    \
+MACRO04 MACRO11 MACRO12 KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_TRNS       KC_TRNS MACRO03       KC_NO   KC_NO   KC_TRNS    KC_TRNS KC_NO           KC_TRNS  \
+KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS    KC_MS_L    KC_TRNS KC_TRNS "LT(2,KC_NO)" KC_TRNS KC_TRNS       KC_NO   KC_NO   KC_TRNS    KC_TRNS KC_NO           "LT(3,KC_NO)"  \
+KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_MS_BTN1 KC_MS_BTN3 KC_MS_R KC_TRNS KC_NO         KC_TRNS KC_TRNS       KC_NO   KC_TRNS KC_MS_BTN2 KC_NO   KC_NO           KC_NO    \
+MACRO07 MACRO08 MACRO15 KC_TRNS KC_MUTE    KC_TRNS    KC_TRNS KC_TRNS KC_NO         KC_NO   MACRO01       KC_TRNS MACRO00 KC_TRNS    KC_TRNS KC_TRNS         KC_NO    \
+MACRO05 MACRO10 MACRO13 KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_NO         KC_TRNS MACRO02       KC_NO   KC_NO   KC_TRNS    KC_TRNS KC_TRNS         KC_NO    \
+KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_MS_U    KC_NO      KC_NO   KC_TRNS KC_NO         KC_TRNS KC_TRNS       KC_TRNS KC_TRNS KC_TRNS    KC_TRNS KC_TRNS         KC_NO    \
+KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_TRNS    KC_TRNS    KC_TRNS KC_TRNS KC_NO         KC_TRNS KC_TRNS       KC_TRNS KC_NO   KC_MS_D    KC_TRNS KC_NO           KC_NO
 
 
-..\zeal60\zealM104.exe keymap 2 \
+${ZEAL} keymap 2 \
 KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_TRNS KC_TRNS KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_NO    \
 KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_NO   KC_TRNS KC_TRNS KC_NO   KC_TRNS  \
 KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_MS_L KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_NO   KC_TRNS KC_TRNS KC_NO   KC_TRNS  \
@@ -41,7 +67,7 @@ KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_TRNS 
 KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_MS_U KC_NO   KC_NO   KC_TRNS KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO    \
 KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_MS_D KC_TRNS KC_NO   KC_NO
 
-..\zeal60\zealM104.exe keymap 3 \
+${ZEAL} keymap 3 \
 KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_TRNS KC_TRNS KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_NO    \
 KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_NO   KC_TRNS KC_TRNS KC_NO   KC_TRNS  \
 KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_MS_L KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_NO   KC_TRNS KC_TRNS KC_NO   KC_TRNS  \
@@ -54,12 +80,12 @@ KC_NO   KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_TRNS KC_NO   KC_TRNS 
 
 
 echo keymap 0 
-..\zeal60\zealM104 get_keymap 0
+${ZEAL} get_keymap 0
 echo keymap 1 
-..\zeal60\zealM104 get_keymap 1
+${ZEAL} get_keymap 1
 echo keymap 2 
-..\zeal60\zealM104 get_keymap 2
+${ZEAL} get_keymap 2
 echo keymap 3
-..\zeal60\zealM104 get_keymap 3
+${ZEAL} get_keymap 3
 
 
