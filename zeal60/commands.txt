@@ -12,6 +12,13 @@ Init and bootloader:
 Backlight: 
   backlight_config_get_value | backlight_config_get_values
     use_split_backspace
+    use_split_left_shift
+    use_split_right_shift
+    use_7u_spacebar
+    use_iso_enter
+    disable_hhkb_blocker_leds
+    disable_when_usb_suspended
+    disable_after_timeout
     brightness
     effect
     effect_speed
