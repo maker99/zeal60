@@ -651,6 +651,7 @@ int main(int argc, char **argv)
 	if (argc <= 1)
 	{
 		// No args, do nothing
+		printf("no arguments, exiting\n");
 		return 0;
 	}
 
@@ -681,6 +682,11 @@ int main(int argc, char **argv)
 	{
 		device = hid_open_least_uptime( DEVICE_VID, DEVICE_PID, DEVICE_INTERFACE_NUMBER );
 	}	
+	// use VID and PID defined during build from config.h
+	if ( !device )
+	{
+		device = hid_open_least_uptime( DEVICE_VID, 0x00, DEVICE_INTERFACE_NUMBER );
+	}		
 	if ( ! device )		    
 	{
 		std::cerr << "*** Error: Device not found" << std::endl;

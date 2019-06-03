@@ -17,8 +17,16 @@ struct ConfigNameToId
 {
 	char *name;
 	uint8_t id;
+	uint8_t parameterType;
 };
 
+enum backlight_config_parameter_types
+{
+	blPtype_uint8 = 0x01,
+	blPtype_uint82 = 0x02,
+	blPtype_color   = 0x03,
+	blPtype_HSV   = 0x04,
+};
 
 KeycodeStringValue *getKeycodeStringValue(size_t index);
 size_t getKeycodeStringValueCount();
