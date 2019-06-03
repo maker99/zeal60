@@ -1,0 +1,68 @@
+Search "command +==|name +==" (68 hits in 1 file)
+  C:\Data\GIT\misc\MMzeal\zeal60\zeal60.cpp (68 hits)
+
+Debugging: 
+  hidtest
+  debug
+  
+Init and bootloader: 
+  eeprom_reset
+  bootloader_jump | jump_bootloader | bootloader
+
+Backlight: 
+  backlight_config_get_value | backlight_config_get_values
+    use_split_backspace
+    brightness
+    effect
+    effect_speed
+    color_1
+    color_2
+    caps_lock_indicator_color
+    num_lock_indicator_color
+    scroll_lock_indicator_color
+    layer_1_indicator_color
+    layer_2_indicator_color
+    layer_3_indicator_color
+    caps_lock_indicator_row_col
+    num_lock_indicator_row_col
+    scroll_lock_indicator_row_col
+    layer_1_indicator_row_col
+    layer_2_indicator_row_col
+    layer_3_indicator_row_col
+
+  backlight_config_set_value | backlight_config_set_values
+    use_split_backspace
+    use_split_left_shift
+    use_split_right_shift
+    use_7u_spacebar
+    use_iso_enter
+    disable_hhkb_blocker_leds
+    disable_when_usb_suspended
+    disable_after_timeout
+    brightness
+    effect
+    effect_speed
+    color_1
+    color_2
+    caps_lock_indicator_color
+    num_lock_indicator_color
+    scroll_lock_indicator_color
+    layer_1_indicator_color
+    layer_2_indicator_color
+    layer_3_indicator_color
+    caps_lock_indicator_row_col
+    num_lock_indicator_row_col
+    scroll_lock_indicator_row_col
+    layer_1_indicator_row_col
+    layer_2_indicator_row_col
+    layer_3_indicator_row_col
+backlight_config_set_alphas_mods
+
+Keymap: 
+  keymap_reset"
+  keymap | set_keymapkeymap_set
+  get_keymap | keymap_get
+Macros: 
+  macro_buffer_reset | macros_reset
+  get_macro_buffer | get_macros | macros_get
+  set_macro_buffer | set_macros | macros_set
