@@ -537,6 +537,20 @@ bool backlight_config_get_value_HSV( hid_device *device, uint8_t value_id, HSV *
 	return false;	
 }
 
+bool backlight_config_print_value_bool( hid_device *device, std::string name)
+{
+	bool res; 
+	uint8_t value_uint8;
+	uint8_t value_id;
+	if(res = stringToConfigId( name.c_str(), &value_id) )
+	{
+		if(res = backlight_config_get_value_uint8( device, value_id, &value_uint8 ))
+		{
+			printf("%s=%d\n",name.c_str(),value_uint8 == 1 ? 1 : 0);
+		}
+	}
+	return res; 
+}
 
 hid_device *
 hid_open_least_uptime( unsigned short vendor_id, unsigned short product_id, unsigned short interface_number )
@@ -624,6 +638,7 @@ hid_test(void)
 	}
 	hid_free_enumeration(devs);
 }
+
 
 int main(int argc, char **argv)
 {
@@ -739,12 +754,17 @@ int main(int argc, char **argv)
 			uint8_t  value2_uint8  = 0;
 			uint32_t value_uint32 = 0;
 
-			if ( name == "use_split_backspace"  )
+			if ( name == "use_split_backspace"        ||
+			     name == "use_split_left_shift"       ||
+			     name == "use_split_right_shift"      ||
+			     name == "use_7u_spacebar"            ||
+			     name == "use_iso_enter"              ||
+					 name == "disable_hhkb_blocker_leds"  ||
+					 name == "disable_when_usb_suspended" ||
+					 name == "disable_after_timeout"      
+			)
 			{
-				if(res = backlight_config_get_value_uint8( device, id_use_split_backspace, &value_uint8 ))
-				{
-					printf("%s=%08X",name.c_str(),value_uint8);
-				}
+				res = backlight_config_print_value_bool( device, name );
 			}
 			else if ( name == "brightness" )
 			{
@@ -875,10 +895,10 @@ int main(int argc, char **argv)
 				std::cerr << "*** Error: Error getting backlight config values: "<< name << std::endl;
 				hid_close( device );
 				return -1;
-			} else {
-				return 0;
-			}
+			} 
 		}
+		hid_close( device );
+		return 0;
 	}
 	else if ( command == "backlight_config_set_value" ||
 						command == "backlight_config_set_values" )
@@ -1106,6 +1126,7 @@ int main(int argc, char **argv)
 			hid_close( device );
 			return -1;
 		}
+		hid_close( device );
 		return 0;
 	}
 	else if (command == "keymap" || command == "set_keymap"	 || command == "keymap_set" )									 

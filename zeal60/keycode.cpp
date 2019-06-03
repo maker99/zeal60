@@ -13,6 +13,11 @@
 #include "../../qmk_firmware/keyboards/zeal60/rgb_backlight_keycodes.h"
 #include "../../qmk_firmware/keyboards/zeal60/zeal60_keycodes.h"
 
+#ifdef ZEALM104
+#include "keyboards/M/M104/rgb_backlight_api.h"
+#else
+#include "keyboards/zeal60/rgb_backlight_api.h"
+#endif
 // include macro definitions
 #include "../../qmk_firmware/quantum/send_string_keycodes.h"
 
@@ -777,6 +782,67 @@ KeycodeStringValue g_keycodeStringValue[] =
   LOOKUP_MACRO( X_MEDIA_REWIND ),
 
 };
+
+
+
+ConfigNameToId g_configNameId[] =
+{
+	{"use_split_backspace"           , id_use_split_backspace           },
+	{"use_split_left_shift"          , id_use_split_left_shift          },
+	{"use_split_right_shift"         , id_use_split_right_shift         },
+	{"use_7u_spacebar"               , id_use_7u_spacebar               },
+	{"use_iso_enter"                 , id_use_iso_enter                 },
+	{"disable_hhkb_blocker_leds"     , id_disable_hhkb_blocker_leds     },
+	{"disable_when_usb_suspended"    , id_disable_when_usb_suspended    },
+	{"disable_after_timeout"         , id_disable_after_timeout         },
+	{"brightness"                    , id_brightness                    },
+	{"effect"                        , id_effect                        },
+	{"effect_speed"                  , id_effect_speed                  },
+	{"color_1"                       , id_color_1                       },
+	{"color_2"                       , id_color_2                       },
+	{"caps_lock_indicator_color"     , id_caps_lock_indicator_color     },
+	{"caps_lock_indicator_row_col"   , id_caps_lock_indicator_row_col   },
+	{"layer_1_indicator_color"       , id_layer_1_indicator_color       },
+	{"layer_1_indicator_row_col"     , id_layer_1_indicator_row_col     },
+	{"layer_2_indicator_color"       , id_layer_2_indicator_color       },
+	{"layer_2_indicator_row_col"     , id_layer_2_indicator_row_col     },
+	{"layer_3_indicator_color"       , id_layer_3_indicator_color       },
+	{"layer_3_indicator_row_col"     , id_layer_3_indicator_row_col     },
+	{"alphas_mods"                   , id_alphas_mods                   },
+	{"custom_color"                  , id_custom_color                  },
+#ifdef ZEALM104
+	{"num_lock_indicator_color"      , id_num_lock_indicator_color      },
+	{"num_lock_indicator_row_col"    , id_num_lock_indicator_row_col    },
+	{"scroll_lock_indicator_color"   , id_scroll_lock_indicator_color   },
+	{"scroll_lock_indicator_row_col" , id_scroll_lock_indicator_row_col },
+#endif
+  {"lastEntry"                        , 0                                },
+};
+
+
+bool stringToConfigId( const char *string, uint8_t *value )
+{
+  // printf("stringToConfigId: searching for %s\n ",string);
+	char s_lastEntry[] = "lastEntry";
+	for ( size_t i = 0; i < 30; i++ )
+	{  
+    ConfigNameToId nextEntry = g_configNameId[i]; 
+    // printf("stringToConfigId: i:%02d, name=%s, id=%02X\n ",i,nextEntry.name,nextEntry.id);
+		if (strcmp( nextEntry.name, "lastEntry" ) == 0 )
+		{
+			// printf("stringToConfigId: exiting! i:%02d, name=%s, id=%02X\n ",i,nextEntry.name,nextEntry.id);
+			return false;
+		}
+		
+		if ( strcmp( nextEntry.name, string ) == 0 )
+		{
+			// printf("stringToConfigId: found!, i:%02d, name=%s, id=%02X\n ",i,nextEntry.name,nextEntry.id);
+			*value = nextEntry.id;
+			return true;
+		}
+	}
+	return false;
+}
 
 size_t getKeycodeStringValueCount()
 {
