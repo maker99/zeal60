@@ -18,13 +18,24 @@ compiler:
 
 # Build steps
 script: 
+  # checkout dependencies
   - cd ${TRAVIS_BUILD_DIR}
   - git clone https://github.com/maker99/qmk_firmware.git
-  - cd qmk_firmware
+  
+  # prepare the build environment 
+  - cd ${TRAVIS_BUILD_DIR}/zeal60
+  - ln -s ../qmk_firmware/keyboards
+  - ln -s ../qmk_firmware/quantum
+  - ln -s ../hidapi
+
+  - ls -alh
+  #- make zeal60
+  
+  # prepare for M104
+  - cd ${TRAVIS_BUILD_DIR}/qmk_firmware
   - git checkout M104
   - ls -alh keyboards/M/M104
   - cd ${TRAVIS_BUILD_DIR}/zeal60
-  - ls -alh
   #- make zeal60
 
 
