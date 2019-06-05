@@ -8,11 +8,11 @@
 
 #include "keycode.h"
 
-#include "../../qmk_firmware/tmk_core/common/keycode.h"
-#include "../../qmk_firmware/quantum/quantum_keycodes.h"
-#include "../../qmk_firmware/tmk_core/common/action_code.h"
-#include "../../qmk_firmware/keyboards/zeal60/rgb_backlight_keycodes.h"
-#include "../../qmk_firmware/keyboards/zeal60/zeal60_keycodes.h"
+#include "../qmk_firmware/tmk_core/common/keycode.h"
+#include "../qmk_firmware/quantum/quantum_keycodes.h"
+#include "../qmk_firmware/tmk_core/common/action_code.h"
+#include "../qmk_firmware/keyboards/zeal60/rgb_backlight_keycodes.h"
+#include "../qmk_firmware/keyboards/zeal60/zeal60_keycodes.h"
 
 #include <cstring>
 #include <string>
