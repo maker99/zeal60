@@ -18,6 +18,11 @@ compiler:
 
 # Build steps
 script: 
+  - cd ${TRAVIS_BUILD_DIR}
+  - git clone https://github.com/maker99/qmk_firmware.git
+  - cd qmk_firmware
+  - git checkout M104
+  - ls -alh keyboards/M/M104
   - cd ${TRAVIS_BUILD_DIR}/zeal60
   - ls -alh
   #- make zeal60
