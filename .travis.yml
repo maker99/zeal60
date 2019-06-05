@@ -20,14 +20,13 @@ script:
   # checkout dependencies
   - cd ${TRAVIS_BUILD_DIR}
   #- git clone https://github.com/maker99/qmk_firmware.git
-  - git clone --single-branch --branch M104 --depth 1 --no-checkout --filter=blob:none https://github.com/maker99/qmk_firmware
+  - git clone --single-branch --branch M104 --depth 1 --no-checkout https://github.com/maker99/qmk_firmware
   - cd qmk_firmware 
-  - git checkout -- keyboards/M
-  - git checkout -- quantum
+  - git checkout M104 -- keyboards/M
+  - git checkout M104 -- quantum
   - ls -alh keyboards
   - ls -alh
-  - git clone https://github.com/signal11/hidapi.git
-  - ls -alh hidapi
+
   
   # prepare the build environment 
   - cd ${TRAVIS_BUILD_DIR}/zeal60
@@ -37,13 +36,8 @@ script:
 
   - ls -alh
   #- make zeal60
-  
-  # prepare for M104
-  - cd ${TRAVIS_BUILD_DIR}/qmk_firmware
-  - git checkout M104
-  - ls -alh keyboards/M/M104
   - cd ${TRAVIS_BUILD_DIR}/zeal60
-  #- make zeal60
+  - make zeal60M104
 
 
 after_success:
