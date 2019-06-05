@@ -1,5 +1,10 @@
 *.exe
-zeal60/zeal60
+zeal60/zeal6*
+zeal60/zealM*
+zeal60/hidapi
+zeal60/quantum
+zeal60/keyboards
+
 zeal60/*.o
 
 # Ignore vim swap files
