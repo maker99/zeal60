@@ -32,8 +32,7 @@ compiler:
 # Build steps
 script: 
   - cd ${TRAVIS_BUILD_DIR}
-  - make check
-  
+
   # checkout dependencies
   - git clone --single-branch --branch M104 --depth 1 https://github.com/maker99/qmk_firmware
   
@@ -42,6 +41,7 @@ script:
   - ln -s ../qmk_firmware/keyboards
   - ln -s ../qmk_firmware/quantum
   - ln -s ../hidapi/hidapi
+  - make check
   
   - make zealM104
 
