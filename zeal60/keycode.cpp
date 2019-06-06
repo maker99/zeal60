@@ -19,7 +19,7 @@
 #include "keyboards/zeal60/rgb_backlight_api.h"
 #endif
 // include macro definitions
-#include "../../qmk_firmware/quantum/send_string_keycodes.h"
+#include "../qmk_firmware/quantum/send_string_keycodes.h"
 
 #define SS_TAP_CODE 1
 #define SS_DOWN_CODE 2
