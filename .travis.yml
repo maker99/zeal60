@@ -11,7 +11,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-7
+            #- g++-7
       env:
         - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
 
@@ -34,12 +34,9 @@ compiler:
 script: 
   # checkout dependencies
   - cd ${TRAVIS_BUILD_DIR}
-  - gcc --version
-  - g++ --version
-  - ${CC} --version
-  - ${CXX} --version
+
   #- git clone https://github.com/maker99/qmk_firmware.git
-  - git clone --single-branch --branch M104 --depth 1 https://github.com/maker99/qmk_firmware
+  #- git clone --single-branch --branch M104 --depth 1 https://github.com/maker99/qmk_firmware
   
   # prepare the build environment 
   - cd ${TRAVIS_BUILD_DIR}/zeal60
@@ -50,7 +47,8 @@ script:
   #- make zeal60
   - cd ${TRAVIS_BUILD_DIR}/zeal60
   - ls -alh
-  - make zealM104
+  - make check
+  #- make zealM104
 
 
 after_success:
