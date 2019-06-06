@@ -26,7 +26,7 @@ script:
   - cd ${TRAVIS_BUILD_DIR}/zeal60
   - ln -s ../qmk_firmware/keyboards
   - ln -s ../qmk_firmware/quantum
-  - ln -s ../hidapi
+  - ln -s ../hidapi/hidapi
 
   #- make zeal60
   - cd ${TRAVIS_BUILD_DIR}/zeal60
