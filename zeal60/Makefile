@@ -24,8 +24,8 @@ CPPFLAGS=-I/usr/local/lib -Wno-write-strings
 LDFLAGS=
 COBJS=
 ifeq ($(OSNAME),Darwin)
-	mCC =$(or $(CC), $(gcc))
-	mCXX=$(or $(CXX),$(g++))
+	mCC =$(or ${CC), $(gcc))
+	mCXX=$(or ${CXX),$(g++))
 	CPPFLAGS += -lhidapi
 # else ifeq ($(OSNAME),CYGWIN_NT-10.0)
 # else ifeq ($(findstring CYGWIN,$(OSNAME)),CYGWIN)
@@ -58,9 +58,12 @@ $(COBJS): %.o: ../hidapi/windows/%.c
 #      -D$(shell...) transforms the target (= the keyboard name) into the uppercase, which
 #      is used in config.h to define keyboard specific data (e.g. PID,VID,...)
 $(KEYBOARDS): $(SOURCES)
+	echo OS:  ${OSNAME}
+	echo CC:  ${OSNAME}
+	echo CXX: ${mCXX}
 	$(mCXX) $(CPPFLAGS) -D$(shell echo ${@} | tr a-z A-Z ) $(filter %.cpp,$^) -o $@ $(LDFLAGS) 
 
-	
+
 # Targets: 
 dist: 
 	$(RM) *.o
