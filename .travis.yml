@@ -37,7 +37,7 @@ script:
   - gcc --version
   - g++ --version
   - ${CC} --version
-  - $(CXX) --version
+  - ${CXX} --version
   #- git clone https://github.com/maker99/qmk_firmware.git
 #  - git clone --single-branch --branch M104 --depth 1 https://github.com/maker99/qmk_firmware
   
