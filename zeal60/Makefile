@@ -47,12 +47,12 @@ endif
 
 # Targets: 
 check: 
-	# OS:   $(OSNAME)
-	# myOS: $(myOS)
-	# mCC:  $(mCC)   
-	# CC:   $(CC)    
-	# mCXX: $(mCXX)  
-	# CXX:  $(CXX)   
+	echo OS:   $(OSNAME)									> /dev/null
+	echo myOS: $(myOS)									> /dev/null
+	echo mCC:  $(mCC)									> /dev/null
+	echo CC:   $(CC)									> /dev/null
+	echo mCXX: $(mCXX)									> /dev/null
+	echo CXX:  $(CXX)									> /dev/null
 	
 dist: 
 	$(RM) *.o
