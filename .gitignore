@@ -1,6 +1,7 @@
 *.exe
 zeal60/zeal6*
 zeal60/zealM*
+qmk_firmware
 zeal60/hidapi
 zeal60/quantum
 zeal60/keyboards
