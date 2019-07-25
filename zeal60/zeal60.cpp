@@ -1290,16 +1290,16 @@ int main(int argc, char **argv)
 				{
 					case 0             :                                break; // macro separator should not appear here
 					case 1 ... 3       :  
-																printf("\\%d",buffer[i]);
-																keycodeString = valueToKeycode( buffer[i+1] );
-																i++;
-																if (keycodeString == "?")
-																{
-																	printf("\\x%02X",buffer[i]);            
-																} else {
-																	printf("\\%s", keycodeString.c_str());
-																};
-																															 break; // 1: tap, 2: down, 3: up
+						printf("\\%d",buffer[i]);
+						keycodeString = valueToKeycode( buffer[i+1] );
+						i++;
+						if (keycodeString == "?")
+						{
+							printf("\\x%02X",buffer[i]);            
+						} else {
+							printf("\\%s", keycodeString.c_str());
+						};
+						break; // 1: tap, 2: down, 3: up
 					case '\b'          :  printf("\\b")              ;   break; // back space
 					case '\n'          :  printf("\\n")              ;   break; // enter
 					case '\t'          :  printf("\\t")              ;   break; // tab
@@ -1411,17 +1411,17 @@ int main(int argc, char **argv)
 						          break;
 						case 'X':                                             // print the send_string keycode 
 						          keyCode_string = ""; 
-										  uint16_t value;
+						          uint16_t value;
 						          
 						          for (;input_string[i] != ';' && i < input_string.length(); i++)
 						          {
-												keyCode_string += input_string[i];
+						          	keyCode_string += input_string[i];
 						          }
 						          if ( stringToValue(keyCode_string.c_str(), &value ) )
 						          {
-												macro_string += value;
+						          	macro_string += value;
 						          } else {
-												macro_string += " @@";
+						          	macro_string += " @@";
 						          }
 						                                             break;
 						default:  macro_string += input_string[i];   break;  // literal char
